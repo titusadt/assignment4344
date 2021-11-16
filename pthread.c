@@ -99,9 +99,9 @@ void *get_input()
       put_buff_1(item);
       return NULL;
     }
-    printf("THIS IS THE INPUT FILE \n")
-    //printf(" %s", item);
-    put_buff_1(item);
+    //printf("THIS IS THE INPUT FILE \n");
+    printf(" %s", item);
+    //put_buff_1(item);
     free(item);
   }
   //printf(" %s\n", item);
@@ -147,7 +147,7 @@ void put_buff_2(char* item){
 /*****
 replacig lie separator with space
 ******/
-char* LinetoSpace()
+void* LinetoSpace()
 {
   char* item;
   for(int i = 0; i < NUM_ITEMS; i++){
@@ -193,7 +193,7 @@ void put_buff_3(char* item){
 /**
 REPLACING DOUBLE + SIGN (++)
 */
-char* replacePlus(){
+void* replacePlus(){
   char* item;
   for(int b = 0; b < NUM_ITEMS; b++){
     item = get_buff_2();
@@ -238,13 +238,11 @@ char* get_buff_3(){
   return item;
 }
 
-/*
-eighty characters thing
-
-*/
-char* writeOutput(){
-  char* item;
-  for(int i =0; i >= 80; i++){
+char* getEighty(char* item){
+  char buffer[SIZE];
+  memset(buffer, '\0', sizeof(buffer));
+  size_t amount = strlen(item);
+  while(amount >= 80){
     printf("\n");
     fflush(stdout);
     write(1, item, 80);
@@ -252,12 +250,38 @@ char* writeOutput(){
     int s = 79;
     for(int j =0; j < strlen(item); j++){
       if(item[s++] != '\0'){
-        item[i] = item[s];
+        buffer[j] = item[s];
       }
       else
         break;
+  }
+  memset(item, '\0', sizeof(item));
+  strcpy(item, buffer);
+  amount = amount -80;
+  }
+  return item;
+}
+
+
+/*
+eighty characters thing
+
+*/
+void* writeOutput(){
+  char* item;
+  char buffer[SIZE];
+  memset(buffer, '\0', sizeof(buffer));
+  for(int i =0; i < NUM_ITEMS; i++){
+    item = get_buff_3();
+    strcat(buffer, item);
+    if(strstr(item, STOP_SYMBOL) != NULL){
+      break;
+    }
+    else{
+      getEighty(buffer);
     }
   }
+  return NULL;
 }
 
 /*
